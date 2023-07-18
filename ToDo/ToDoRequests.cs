@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace TD.MinAPI;
 
@@ -51,14 +53,25 @@ public static class ToDoRequests
         }
         return Results.Ok(todo);
     }
-    public static IResult Create(IToDoService service, ToDo toDo)
+    public static IResult Create(IToDoService service, ToDo toDo, IValidator<ToDo> validator)
     {
+        var validationResult = validator.Validate(toDo);
+        if (!validationResult.IsValid)
+        {
+            return Results.BadRequest(validationResult.Errors);
+        }
         service.Create(toDo);
 
         return Results.Created($"/todos/{toDo.Id}", toDo);
     }
-    public static IResult Update(IToDoService service, Guid id, ToDo toDo)
+    public static IResult Update(IToDoService service, Guid id, ToDo toDo, IValidator<ToDo> validator)
     {
+        var validationResult = validator.Validate(toDo);
+        if (!validationResult.IsValid)
+        {
+            return Results.BadRequest(validationResult.Errors);
+        }
+
         var todo = service.GetById(id);
         if (todo == null)
         {

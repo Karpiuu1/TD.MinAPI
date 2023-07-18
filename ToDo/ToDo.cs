@@ -1,4 +1,6 @@
-﻿namespace TD.MinAPI;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TD.MinAPI;
 
 public class ToDo
 {
