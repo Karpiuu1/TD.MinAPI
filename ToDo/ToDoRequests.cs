@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,9 +9,11 @@ public static class ToDoRequests
 {
     public static WebApplication RegisterEndpoints(this WebApplication app)
     {
+        
         app.MapGet("/todos", ToDoRequests.GetAll)
             .Produces<List<ToDo>>()
-            .WithTags("To Dos");
+            .WithTags("To Dos")
+            .RequireAuthorization();
             
 
         app.MapGet("/todos/{id}", ToDoRequests.GetById)
@@ -55,6 +58,7 @@ public static class ToDoRequests
         }
         return Results.Ok(todo);
     }
+    [Authorize]
     public static IResult Create(IToDoService service, ToDo toDo)
     {
 
