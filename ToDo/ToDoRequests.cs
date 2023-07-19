@@ -19,7 +19,8 @@ public static class ToDoRequests
         app.MapGet("/todos/{id}", ToDoRequests.GetById)
             .Produces<ToDo>()
             .Produces(StatusCodes.Status404NotFound)
-            .WithTags("To Dos");
+            .WithTags("To Dos")
+            .AllowAnonymous();
 
 
         app.MapPost("/todos", ToDoRequests.Create)
@@ -49,6 +50,7 @@ public static class ToDoRequests
         var todos = service.GetAll();
         return Results.Ok(todos);
     }
+    [AllowAnonymous]
     public static IResult GetById(IToDoService service, Guid id) 
     {
         var todo = service.GetById(id);
